@@ -1,2 +1,2 @@
-export * from "./Labels/DifficultyLabel";
-export * from "./SudokuLogo";
+export * from "./Labels";
+export {default as SudokuLogo} from "./SudokuLogo";

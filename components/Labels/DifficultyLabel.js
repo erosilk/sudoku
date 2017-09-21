@@ -8,7 +8,7 @@ export default class DifficultyLabel extends Component {
   render() {
     return (
       <View>
-        <Image source={image} style={styles.logo} />
+        <Image source={image} style={styles.label} />
       </View>
     );
   }
@@ -16,8 +16,8 @@ export default class DifficultyLabel extends Component {
 
 const styles = StyleSheet.create({
   label: {
-    height: 76,
-    width: 340,
+    height: 26,
+    width: 240,
     resizeMode: "contain"
   }
 });
