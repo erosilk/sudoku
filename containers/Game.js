@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Board from '../components/Board';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { StackNavigator } from "react-navigation";
 import { LinearGradient } from "expo";
 
+const width = Dimensions.get.width
+
 class Game extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  }
-    }
     static navigationOptions = {
         //title: "Home",
         headerStyle: {
@@ -18,6 +16,12 @@ class Game extends Component {
         headerMode: "none",
         header: null
     };
+
+    constructor(props) {
+        super(props);
+        //this.state = {  }
+    }
+
     render() { 
         return (
             <View style={styles.container}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 class Cell extends Component {
     constructor(props) {
@@ -10,9 +10,11 @@ class Cell extends Component {
     }
     render() { 
         return (
-            <View style={styles.cell}>
-                <Text style={styles.cellNum}>{this.props.solution}</Text>
-            </View>
+            <TouchableOpacity>
+                <View style={styles.cell}>
+                    <Text style={styles.cellNum}>{this.props.solution}</Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 }
@@ -29,42 +31,39 @@ class Board extends Component {
     }
 
     componentWillMount() {
-        this.rows.forEach((row,index) => {
-            this.columns.forEach((column) => {
-                this.setState({
-                    [column+row]: {
-                        content: null,
-                        solution: 2,
-                        fixed: true
-                    }
-                })
-                this.setState((prevState, props) => {
+        this.rows.map((row,index) => {
+            return this.columns.map((column) => {
+                return this.setState((prevState, props) => {
                     let newBoardCells = prevState.boardCells;
                     newBoardCells.push(String(column+row));
-
-                    return {boardCells: newBoardCells}
+                    return {
+                        boardCells: newBoardCells,
+                        [column+row]: {
+                            content: null,
+                            solution: 2,
+                            fixed: true
+                        }
+                    }
                 })
             })
             
         })    }
 
-    _boardGenerator() {
-
-    }
 
     render() { 
         return (
                 <View style={styles.board}>
                     {this.rows.map(row => {
                         return(
-                        <View style={styles.row}>
+                        <View key={row} style={styles.row}>
                             {this.columns.map(column => {
                                 return (
                                     <Cell
                                         content={this.state[column+row].content}
                                         solution={this.state[column+row].solution}
                                         fixed={this.state[column+row].content}
-                                    ></Cell>
+                                        key={String(column+row)}
+                                    />
                                 )
                             })}
                         </View>)
