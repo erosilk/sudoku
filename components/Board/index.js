@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import sudoku from '../../utils/sudoku'
+
 
 class Cell extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            content: ""
-         }
+        this.styles = [styles.cell]
     }
+
+    componentWillReceiveProps(nextProps) {
+        
+    }
+
+    componentWillMount() {
+        let newStyles = [styles.cell]
+        if (this.props.shadowedCells.indexOf(this.props.id) >= 0) {
+            newStyles.push(styles.shadowedCell)
+            this.styles = newStyles;
+        }
+    }
+
     render() { 
         return (
-            <TouchableOpacity>
-                <View style={styles.cell}>
-                    <Text style={styles.cellNum}>{this.props.solution}</Text>
+            <TouchableOpacity
+                onPress={()=>{this.props.onclick(this.props.id)}}
+            >
+                <View style={this.styles}>
+                    <Text style={styles.cellNum}>{this.props.content}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -22,26 +37,79 @@ class Cell extends Component {
 class Board extends Component {
     constructor(props) {
         super(props);
-        this.solution = [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9]
+        this._generatePuzzle = this._generatePuzzle.bind(this)
         this.columns = ["A","B","C","D","E","F","G","H","I"];
         this.rows = ["1","2","3","4","5","6","7","8","9"];
+        this.shadowedCells = [];
         this.state = { 
-            boardCells: []
+            boardCells: [],
+            selectedCell: null
          }
     }
 
+    _onCellPress(id) {
+        //console.log(id)
+        this.setState({
+            selectedCell: id
+        })
+    }
+
+    _generatePuzzle() {
+        let puzzle = sudoku.makepuzzle();
+        let solution = sudoku.solvepuzzle(puzzle);
+
+        const normalizedPuzzle = []
+        const normalizedSolution = []
+
+        puzzle.forEach(cell => {
+            if (cell !== null) {
+                normalizedPuzzle.push(cell+1)
+            } else {
+                normalizedPuzzle.push(null)
+            }
+        })
+
+         solution.forEach(cell => {
+            normalizedSolution.push(cell+1);
+        })
+
+        return {
+            puzzle: normalizedPuzzle,
+            solution: normalizedSolution
+        }
+
+    }
+
     componentWillMount() {
+        let puzzleObject = this._generatePuzzle();
+        let puzzle = puzzleObject.puzzle;
+        let solution = puzzleObject.solution;
+
+        [[["D","E","F"],[1,2,3,7,8,9]],[["A","B","C","G","H","I"],[4,5,6]]].forEach((conjunto) => {
+            conjunto[0].forEach(letter => {
+                conjunto[1].forEach(number => {
+                    this.shadowedCells.push(String(letter+number))
+                })
+            })
+        })
+
         this.rows.map((row,index) => {
             return this.columns.map((column) => {
                 return this.setState((prevState, props) => {
                     let newBoardCells = prevState.boardCells;
                     newBoardCells.push(String(column+row));
+                    
+                    let content = puzzle[0];
+                    let cellSolution = solution[0];
+
+                    puzzle = puzzle.slice(1);
+                    solution = solution.slice(1);
                     return {
                         boardCells: newBoardCells,
                         [column+row]: {
-                            content: null,
-                            solution: 2,
-                            fixed: true
+                            content: content,
+                            solution: cellSolution,
+                            fixed: content === solution
                         }
                     }
                 })
@@ -62,6 +130,11 @@ class Board extends Component {
                                         content={this.state[column+row].content}
                                         solution={this.state[column+row].solution}
                                         fixed={this.state[column+row].content}
+                                        onclick={this._onCellPress.bind(this)}
+                                        selectedCell={this.state.selectedCell}
+                                        selectedNumber={this.state.selectedCell ? this.state[this.state.selectedCell].content : null}
+                                        shadowedCells={this.shadowedCells}
+                                        id={String(column+row)}
                                         key={String(column+row)}
                                     />
                                 )
@@ -83,6 +156,9 @@ const styles = StyleSheet.create({
         margin: 2,
         justifyContent: "center",
         alignItems: "center",
+    },
+    shadowedCell: {
+        backgroundColor: "#FFD1D1"
     },
     cellNum: {
         fontSize: 20
