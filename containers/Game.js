@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Board from '../components/Board';
+import NumberButton from '../components/NumberButton';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { StackNavigator } from "react-navigation";
 import { LinearGradient } from "expo";
@@ -26,6 +27,17 @@ class Game extends Component {
         return (
             <View style={styles.container}>
                 <Board />
+                <View style={styles.row}>
+                    <NumberButton number={1}/>
+                    <NumberButton number={2}/>
+                    <NumberButton number={3}/>
+                    <NumberButton number={4}/>
+                    <NumberButton number={5}/>
+                    <NumberButton number={6}/>
+                    <NumberButton number={7}/>
+                    <NumberButton number={8}/>
+                    <NumberButton number={9}/>
+                </View>
                 <LinearGradient
                     colors={["#FF8800", "#AF3100"]}
                     style={{
@@ -50,6 +62,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF8800",
         alignItems: "center",
         justifyContent: "center"
+    },
+    row: {
+        flexDirection: "row"
     },
     difficultyTitle: {
         marginBottom: 30

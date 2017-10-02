@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   board: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: "center",
     alignItems: "center"
   }
