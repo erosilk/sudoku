@@ -1,5 +1,11 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import React, { Component } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions
+} from "react-native";
 
 /*
     Props:
@@ -8,31 +14,35 @@ import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-nati
 
 */
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get("window");
 
 class NumberButton extends Component {
-    constructor(props) {
-        super(props);
-    }
-    render() { 
-        return (
-            <TouchableOpacity>
-                <View style={styles.numberButton}>
-                    <Text>{this.props.number}</Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.props.onclick(this.props.number);
+        }}
+      >
+        <View style={styles.numberButton}>
+          <Text>{this.props.number}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 }
- 
+
 const styles = StyleSheet.create({
-    numberButton: {
-        backgroundColor: "rgba(0,0,0,0.3)",
-        width: (width/9)-(10/9),
-        height: 70,
-        justifyContent: "center",
-        alignItems: "center"
-    }
-})
+  numberButton: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+    width: width / 9 - 10 / 9,
+    height: 70,
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
 
 export default NumberButton;
