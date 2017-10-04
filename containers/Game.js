@@ -34,6 +34,9 @@ class Game extends Component {
 
   componentWillMount() {
     const puzzleObject = this._generatePuzzle();
+    this.setState({
+        puzzleObject: puzzleObject
+    })
 
     let puzzle = puzzleObject.puzzle;
     let solution = puzzleObject.solution;
@@ -44,7 +47,7 @@ class Game extends Component {
             puzzle = puzzle.slice(1);
             solution = solution.slice(1);
             return Object.assign(this.state.board, {
-                [column + row]: {
+                [row + column]: {
                   content: puzzle[0],
                   solution: solution[0],
                   fixed: puzzle[0] === solution[0]
@@ -87,12 +90,14 @@ class Game extends Component {
   }
 
   _selectNumber(id) {
-    if (this.state.selectedCell) {
+    if (this.state.selectedCell && !this.state.board[this.state.selectedCell].fixed) {
         this.setState((prevState, props) => {
+            let num;
+            this.state.board[this.state.selectedCell].content === id ? num = null : num = id;
             return {
                 board: Object.assign(prevState.board, {
                     [this.state.selectedCell]: Object.assign(prevState.board[this.state.selectedCell], {
-                        content: id
+                        content: num
                     })
                 })
             }

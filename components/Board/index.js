@@ -18,7 +18,7 @@ class Board extends Component {
     ].forEach(conjunto => {
       conjunto[0].forEach(letter => {
         conjunto[1].forEach(number => {
-          this.shadowedCells.push(String(letter + number));
+          this.shadowedCells.push(String(number + letter));
         });
       });
     });
@@ -41,9 +41,9 @@ class Board extends Component {
               {this.props.columns.map(column => {
                 return (
                   <Cell
-                    content={this.props.board[column + row].content}
-                    solution={this.props.board[column + row].solution}
-                    fixed={this.props.board[column + row].fixed}
+                    content={this.props.board[row + column].content}
+                    solution={this.props.board[row + column].solution}
+                    fixed={this.props.board[row + column].fixed}
                     onclick={this._onCellPress.bind(this)}
                     selectedCell={this.props.selectedCell}
                     selectedCellNumber={
@@ -53,8 +53,8 @@ class Board extends Component {
                     }
                     selectedNumber={this.props.selectedNumber}
                     shadowedCells={this.shadowedCells}
-                    id={String(column + row)}
-                    key={String(column + row)}
+                    id={String(row + column)}
+                    key={String(row + column)}
                   />
                 );
               })}
