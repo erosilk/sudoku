@@ -22,15 +22,37 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.puzzleObject;
+    this.columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    this.rows = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     this.state = {
       selectedCell: null,
       selectedNumber: null,
-      lastChange: []
+      lastChange: [],
+      board: {}
     };
   }
 
   componentWillMount() {
-    this.puzzleObject = this._generatePuzzle();
+    const puzzleObject = this._generatePuzzle();
+
+    let puzzle = puzzleObject.puzzle;
+    let solution = puzzleObject.solution;
+
+    this.rows.map((row, index) => {
+        return this.columns.map(column => {
+          return this.setState((prevState, props) => {
+            puzzle = puzzle.slice(1);
+            solution = solution.slice(1);
+            return Object.assign(this.state.board, {
+                [column + row]: {
+                  content: puzzle[0],
+                  solution: solution[0],
+                  fixed: puzzle[0] === solution[0]
+                }
+              })
+          });
+        });
+      });
   }
 
   _onCellPress(id) {
@@ -65,9 +87,17 @@ class Game extends Component {
   }
 
   _selectNumber(id) {
-    this.setState({
-      selectedNumber: id
-    });
+    if (this.state.selectedCell) {
+        this.setState((prevState, props) => {
+            return {
+                board: Object.assign(prevState.board, {
+                    [this.state.selectedCell]: Object.assign(prevState.board[this.state.selectedCell], {
+                        content: id
+                    })
+                })
+            }
+        })
+    }
   }
 
   render() {
@@ -84,6 +114,9 @@ class Game extends Component {
     return (
       <View style={styles.container}>
         <Board
+          board={this.state.board}
+          rows={this.rows}
+          columns={this.columns}
           selectedCell={this.state.selectedCell}
           selectedNumber={this.state.selectedNumber}
           _onCellPress={this._onCellPress.bind(this)}
