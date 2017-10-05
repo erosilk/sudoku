@@ -24,10 +24,6 @@ class Board extends Component {
     });
   }
 
-  _writeCellContent(id, number) {
-
-  }
-
   _onCellPress(id) {
     this.props._onCellPress(id);
   }
