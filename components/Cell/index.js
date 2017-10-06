@@ -27,7 +27,7 @@ class Cell extends Component {
           0
       ) {
         newStyles.push(styles.sameRowCell);
-        newTextStyle = styles.cellNum;
+        newTextStyle = styles.lightCellNum;
       }
       // same number
       if (
@@ -35,7 +35,7 @@ class Cell extends Component {
         nextProps.selectedCellNumber === this.props.content
       ) {
         newStyles.push(styles.sameNumberCell);
-        newTextStyle = styles.cellNum;
+        newTextStyle = styles.lightCellNum;
       }
       // selected cell
       if (nextProps.selectedCell === this.props.id) {
@@ -81,19 +81,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     margin: 2,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0
   },
   shadowedCell: {
     backgroundColor: "black"
   },
   sameNumberCell: {
-    backgroundColor: "#88E7FF"
+    backgroundColor: "#B30808"
   },
   sameRowCell: {
-    backgroundColor: "#FFA6A6"
+    backgroundColor: "#1A6E51"
   },
   selectedCell: {
-    backgroundColor: "#88E7FF"
+    backgroundColor: "#80D184"
   },
   cellNum: {
     fontSize: 20,

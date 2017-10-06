@@ -24,6 +24,7 @@ class Game extends Component {
     this.puzzleObject;
     this.columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
     this.rows = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    this.boardCells = [];
     this.state = {
       selectedCell: null,
       selectedNumber: null,
@@ -43,6 +44,7 @@ class Game extends Component {
 
     this.rows.map((row, index) => {
       return this.columns.map(column => {
+        this.boardCells.push(String(row + column));
         return this.setState((prevState, props) => {
           content = puzzle[0];
           cellSolution = solution[0];

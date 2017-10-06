@@ -28,7 +28,7 @@ class NumberButton extends Component {
         }}
       >
         <View style={styles.numberButton}>
-          <Text>{this.props.number}</Text>
+          <Text style={styles.text}>{this.props.number}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -37,11 +37,20 @@ class NumberButton extends Component {
 
 const styles = StyleSheet.create({
   numberButton: {
-    backgroundColor: "rgba(0,0,0,0.3)",
-    width: width / 9 - 10 / 9,
+    width: width / 10 - 10 / 9,
     height: 70,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#2E0607",
+    margin: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0
+  },
+  text: {
+    color: "white",
+    fontSize: 20
   }
 });
 
