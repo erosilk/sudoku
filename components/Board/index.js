@@ -10,10 +10,7 @@ class Board extends Component {
     }
 
     componentWillMount() {
-        [
-            [['D', 'E', 'F'], [1, 2, 3, 7, 8, 9]],
-            [['A', 'B', 'C', 'G', 'H', 'I'], [4, 5, 6]],
-        ].forEach(conjunto => {
+        GAME_SETTINGS.shadowedCells.forEach(conjunto => {
             conjunto[0].forEach(letter => {
                 conjunto[1].forEach(number => {
                     this.shadowedCells.push(String(number + letter));
@@ -38,9 +35,7 @@ class Board extends Component {
                                 <Cell
                                     {...this.props.board[id]}
                                     onclick={this._onCellPress.bind(this)}
-                                    selectedCell={
-                                        this.props.selectedCell
-                                    }
+                                    selectedCell={this.props.selectedCell}
                                     shadowed={
                                         this.shadowedCells.indexOf(id) !== -1
                                     }

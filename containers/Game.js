@@ -6,7 +6,8 @@ import { GAME_SETTINGS } from 'utils/constants';
 import NumberButton from 'components/NumberButton';
 import { StyleSheet, View } from 'react-native';
 
-const normalize = (sudoku) => sudoku.map(cell => cell ? cell + 1 : null);
+const normalize = sudoku =>
+    sudoku.map(cell => (cell !== null ? cell + 1 : null));
 
 class Game extends Component {
     static navigationOptions = {
@@ -32,47 +33,41 @@ class Game extends Component {
 
     componentWillMount() {
         const puzzleObject = this._generatePuzzle(this.props.difficulty);
-        this.setState({
-            puzzleObject: puzzleObject,
-        });
+        const puzzle = puzzleObject.puzzle;
+        const solution = puzzleObject.solution;
+        let board = {};
 
-        let puzzle = puzzleObject.puzzle;
-        let solution = puzzleObject.solution;
-
-        GAME_SETTINGS.rows.map((row) => {
-            return GAME_SETTINGS.columns.map(column => {
+        GAME_SETTINGS.rows.forEach((row, rowIndex) => {
+            GAME_SETTINGS.columns.forEach((column, columnIndex) => {
                 this.boardCells.push(String(row + column));
-                return this.setState((prevState) => {
-                    content = puzzle[0];
-                    cellSolution = solution[0];
-                    puzzle = puzzle.slice(1);
-                    solution = solution.slice(1);
-                    //debugger;
-                    return {
-                        board: {
-                            ...prevState.board,
-                            [row + column]: {
-                                id: String(row + column),
-                                row: row,
-                                column: column,
-                                content: content,
-                                solution: cellSolution,
-                                fixed: content === cellSolution,
-                            },
-                        },
-                    };
-                });
+                const index = 9 * rowIndex + columnIndex;
+                board = {
+                    ...board,
+                    [row + column]: {
+                        id: String(row + column),
+                        row: row,
+                        column: column,
+                        content: puzzle[index],
+                        solution: solution[index],
+                        fixed: puzzle[index] === solution[index],
+                    },
+                };
             });
         });
+
+        this.setState({ board: board, puzzleObject: puzzleObject });
     }
 
     _generatePuzzle(difficulty) {
         const difficultyMargin = GAME_SETTINGS.difficultyMargins[difficulty];
         let puzzle;
         do {
-          let tempPuzzle = sudoku.makepuzzle();
-          let rating = sudoku.ratepuzzle(tempPuzzle,2);
-          puzzle = (rating >= difficultyMargin[0] && rating <= difficultyMargin[1]) ? tempPuzzle : null
+            let tempPuzzle = sudoku.makepuzzle();
+            let rating = sudoku.ratepuzzle(tempPuzzle, 2);
+            puzzle =
+                rating >= difficultyMargin[0] && rating <= difficultyMargin[1]
+                    ? tempPuzzle
+                    : null;
         } while (!puzzle);
         const solution = sudoku.solvepuzzle(puzzle);
         return {
@@ -81,33 +76,27 @@ class Game extends Component {
         };
     }
 
-    _selectNumber(id) {
-        if (
-            this.state.selectedCell &&
-            !this.state.board[this.state.selectedCell.id].fixed
-        ) {
-            this.setState((prevState, props) => {
-                let num;
-                this.state.board[this.state.selectedCell.id].content === id
-                    ? (num = null)
-                    : (num = id);
-                return {
-                    board: Object.assign(prevState.board, {
-                        [this.state.selectedCell.id]: Object.assign(
-                            prevState.board[this.state.selectedCell.id],
-                            {
-                                content: num,
-                            },
-                        ),
-                    }),
-                };
-            });
+    _selectNumber(number) {
+        const selectedCell = this.state.selectedCell
+            ? this.state.board[this.state.selectedCell.id]
+            : null;
+        if (selectedCell && !selectedCell.fixed) {
+            this.setState(prevState => ({
+                board: {
+                    ...prevState.board,
+                    [selectedCell.id]: {
+                        ...prevState.board[selectedCell.id],
+                        content:
+                            selectedCell.content !== number ? number : null,
+                    },
+                },
+            }));
         }
     }
 
-    render() {
-        var numberButtons = [];
-        for (var i = 1; i <= 9; i++) {
+    numberButtons() {
+        let numberButtons = [];
+        for (let i = 1; i <= 9; i++) {
             numberButtons.push(
                 <NumberButton
                     key={i}
@@ -116,6 +105,10 @@ class Game extends Component {
                 />,
             );
         }
+        return numberButtons;
+    }
+
+    render() {
         return (
             <Layout>
                 <Board
@@ -131,7 +124,7 @@ class Game extends Component {
                     }
                     puzzleObject={this.puzzleObject}
                 />
-                <View style={styles.row}>{numberButtons}</View>
+                <View style={styles.row}>{this.numberButtons()}</View>
             </Layout>
         );
     }
