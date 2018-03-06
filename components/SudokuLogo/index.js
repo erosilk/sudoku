@@ -17,7 +17,7 @@ export default class SudokuLogo extends Component {
 const styles = StyleSheet.create({
   logo: {
     height: 76,
-    width: 340,
+    width: 250,
     resizeMode: "contain",
     marginBottom: 40,
     marginTop: 40
